@@ -98,7 +98,7 @@ Developed in **12 hours** during the 🛠️ *LionCircuits x PCB Cupid 1.0 Hacka
 
 🎯 **LionCircuits x PCB Cupid 1.0 Hackathon**  
 ⏱️ **Duration:** 12 Hours  
-👨‍💻 **Team:** Kishore R, Sree Balaji R Kishore, Moulieswaran A, Sree Balaji P  
+👨‍💻 **Team:** Kishore R, R Kishore, Moulieswaran A, Sree Balaji P  
 🏫 **Institution:** SSN College of Engineering
 
 ---
