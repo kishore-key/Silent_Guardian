@@ -1,0 +1,127 @@
+
+#include <WiFi.h>
+#include <HTTPClient.h>
+
+// === Wi-Fi and Telegram Setup ===
+const char* ssid = "YOUR HOTSPOT NAME";
+const char* password = "YOUR PASSWORD";
+
+String botToken = "YOUR BOT TOKEN";  // Replace with your bot token
+String chatID = "YOUR BOT ID";  // Replace with your chat ID
+
+// === Pins ===
+#define TILT_PIN    3    // Tilt sensor
+#define BUTTON_PIN  8    // Push button
+#define LED_PIN     2    // LED
+
+// === Logic Control ===
+bool ledState = false;
+bool lastButtonState = HIGH;
+unsigned long lastDebounceTime = 0;
+const unsigned long debounceDelay = 200;
+
+void setup() {
+  Serial.begin(115200);
+
+  pinMode(TILT_PIN, INPUT);               // Tilt input
+  pinMode(BUTTON_PIN, INPUT_PULLUP);      // Button input
+  pinMode(LED_PIN, OUTPUT);               // LED output
+  digitalWrite(LED_PIN, LOW);
+
+  // Connect to Wi-Fi
+  Serial.print("Connecting to WiFi...");
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nConnected to WiFi!");
+  Serial.println("System Ready");
+}
+
+void loop() {
+  bool currentButtonState = digitalRead(BUTTON_PIN);
+  bool tiltState = digitalRead(TILT_PIN);
+  unsigned long currentTime = millis();
+
+  // --- LED is OFF: Turn ON with Tilt or Button ---
+  if (!ledState) {
+    if (tiltState == LOW) {
+      Serial.println("SHE IS IN DANGER!!! RESCUE!!!");
+      ledState = true;
+      digitalWrite(LED_PIN, HIGH);
+      sendTelegramMessage("🚨 Alert: SHE IS IN DANGER!!! RESCUE!!!");
+      delay(1000);  // Short delay to ensure requests don't collide
+      sendLocation(12.9716, 77.5946);  // Replace with real coordinates if needed
+    }
+    else if (lastButtonState == HIGH && currentButtonState == LOW &&
+             (currentTime - lastDebounceTime > debounceDelay)) {
+      Serial.println("Button pressed → LED ON");
+      ledState = true;
+      digitalWrite(LED_PIN, HIGH);
+      lastDebounceTime = currentTime;
+      sendTelegramMessage("🚨 Alert: SHE IS IN DANGER!!! RESCUE!!!");
+    }
+  }
+
+  // --- LED is ON: Turn OFF only with button ---
+  else {
+    if (lastButtonState == HIGH && currentButtonState == LOW &&
+        (currentTime - lastDebounceTime > debounceDelay)) {
+      Serial.println("Button pressed → LED OFF");
+      ledState = false;
+      digitalWrite(LED_PIN, LOW);
+      lastDebounceTime = currentTime;
+      sendTelegramMessage("✅ Info: SHE IS SAFE NOW.");
+    }
+  }
+
+  lastButtonState = currentButtonState;
+}
+
+// === Send Message to Telegram ===
+void sendTelegramMessage(String message) {
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    String url = "https://api.telegram.org/bot" + botToken +
+                 "/sendMessage?chat_id=" + chatID +
+                 "&text=" + message + "&parse_mode=Markdown";
+
+    http.begin(url);
+    int httpResponseCode = http.GET();
+
+    if (httpResponseCode > 0) {
+      Serial.println("Message sent!");
+    } else {
+      Serial.print("Telegram Error: ");
+      Serial.println(httpResponseCode);
+    }
+    http.end();
+  } else {
+    Serial.println("WiFi not connected. Cannot send message.");
+  }
+}
+
+// === Send Location to Telegram ===
+void sendLocation(float latitude, float longitude) {
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    String url = "https://api.telegram.org/bot" + botToken +
+                 "/sendLocation?chat_id=" + chatID +
+                 "&latitude=" + String(latitude, 6) +
+                 "&longitude=" + String(longitude, 6);
+    
+    http.begin(url);
+    int httpResponseCode = http.GET();
+
+    if (httpResponseCode > 0) {
+      Serial.println("Location sent!");
+    } else {
+      Serial.print("Location Error: ");
+      Serial.println(httpResponseCode);
+    }
+    http.end();
+  } else {
+    Serial.println("WiFi not connected. Cannot send location.");
+  }
+}
