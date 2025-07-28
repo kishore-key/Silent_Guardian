@@ -7,15 +7,15 @@ Developed in **12 hours** during the 🛠️ *LionCircuits x PCB Cupid 1.0 Hacka
 
 ## 📹 Demo
 
-🎥 [Click here to watch the working video](https://drive.google.com/your-demo-video-link)
+🎥 [Click here to watch the working video](https://drive.google.com/file/d/15r_9ggiSoyBdhbDEd-R7voO9MUKwHn2Z/view?usp=drive_link)
 
 ---
 
 ## 📄 Downloads
 
-- 📘 [View Documentation (PDF)](https://drive.google.com/your-documentation-link)
-- 💻 [Download Source Code (TXT)](https://drive.google.com/your-code-file-link)
-- 🔧 [View Circuit Diagram](https://drive.google.com/your-circuit-diagram-link)
+- 📘 [View Documentation (PDF)](https://drive.google.com/file/d/1_DZSehVQ4mV-5An1KjDha0OluFvK2ii_/view?usp=drive_link)
+- 💻 [Download Source Code (TXT)](https://drive.google.com/file/d/1zjA1uGXCpuU8vgXpuDz5dklDD1pkejVt/view?usp=drive_link)
+- 🔧 [View Circuit Diagram](https://drive.google.com/file/d/1ueZmfGkveJkQSkrMLZSevIJGoFG96frH/view?usp=drive_link)
 
 ---
 
